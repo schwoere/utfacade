@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : utql.xsd
+    Created on : April 27, 2007, 10:45 AM
+    Author     : Peter Keitler
+    Description: See annotations of this schema
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+        xmlns:utql="http://ar.in.tum.de/ubitrack/utql"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        targetNamespace="http://ar.in.tum.de/ubitrack/utql" 
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xml:lang="en-GB">
+    
+    <annotation>
+        <documentation>Schema describing the Ubiquitous Tracking Query Language (UTQL) for communication of UbiTrack clients and server. The schema covers both communication directions, thus application queries and the server's response.</documentation>
+    </annotation>
+    
+    <!-- Needed until a final version is available at its canonical location http://www.w3.org/1999/xhtml.xsd -->
+    <import namespace="http://www.w3.org/1999/xhtml" schemaLocation="http://www.w3.org/2002/08/xhtml/xhtml1-strict.xsd"/>
+
+    
+    
+    <element name="UTQLRequest" type="utql:UTQLRequestType">
+        <annotation>
+            <documentation>Root element of a UTQL client request. It contains at least one pattern element</documentation>
+        </annotation>
+    </element>
+    
+    <element name="UTQLResponse" type="utql:UTQLResponseType">
+        <annotation>
+            <documentation>Root element of a UTQL server response. It contains at least one pattern element.</documentation>
+        </annotation>
+        
+        <key name="ResponsePatternIDKey">
+            <annotation>
+                <documentation>Ensure that the id of all pattern elements is unique</documentation>
+            </annotation>
+            
+            <selector xpath="utql:Pattern"/>
+            <field xpath="@id"/>
+        </key>
+        
+        <keyref name="ResponsePatternIDKeyRef" refer="utql:ResponsePatternIDKey">
+            <annotation>
+                <documentation>Ensure that all pattern elements referred by Edge elements belonging to some other Input element exist.</documentation>
+            </annotation>
+            
+            <selector xpath="utql:Pattern/utql:Input/utql:Edge"/>
+            <field xpath="@pattern-ref"/>
+        </keyref>
+    </element>
+    
+    
+    
+    <complexType name="UTQLRequestType">
+        <sequence>
+            <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+            <element name="Pattern" type="utql:RequestPatternType" minOccurs="0" maxOccurs="unbounded">
+                <key name="QueryEdgeNameKey">
+                    <annotation>
+                        <documentation>Ensure that each Edge element belonging to this pattern has a unique name.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Input/utql:Edge|utql:Output/utql:Edge"/>
+                    <field xpath="@name"/>
+                </key>
+                <key name="QueryInputEdgeNameKey">
+                    <annotation>
+                        <documentation>Ensure that each Edge element belonging to the Input element of this pattern has a unique name. This is redundant because key QueryEdgeNameKey also includes the edge referred here, but we need this key nevertheless below in order to ensure that edges referenced in the Constraints element really exist in the Input element of this pattern.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Input/utql:Edge"/>
+                    <field xpath="@name"/>
+                </key>
+                <key name="QueryNodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that each Node element belonging to this pattern has a unique name.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Input/utql:Node|utql:Output/utql:Node"/>
+                    <field xpath="@name"/>
+                </key>
+                <key name="QueryInputNodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that each Node element belonging to the Input element of this pattern has a unique name. This is redundant because key QueryNodeNameKey also includes the nodes referred here, but we need this key nevertheless in order to ensure that edges in the Input element only refer Nodes from the Input element as their source or destination and that edges referenced in the Constraints element really exist in the Input element of this pattern. See also below.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Input/utql:Node"/>
+                    <field xpath="@name"/>
+                </key>
+                <keyref name="QueryInputSourceNodeNameKeyRef" refer="utql:QueryInputNodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that all Node elements referred by Edge elements belonging to the Input element of this pattern as their source node, exist in this Input element, too.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Input/utql:Edge"/>
+                    <field xpath="@source"/>
+                </keyref>
+                <keyref name="QueryInputDestNodeNameKeyRef" refer="utql:QueryInputNodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that all Node elements referred by Edge elements belonging to the Input element of this pattern as their destination node, exist in this Input element, too.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Input/utql:Edge"/>
+                    <field xpath="@destination"/>
+                </keyref> 
+                <keyref name="QueryOutputSourceNodeNameKeyRef" refer="utql:QueryNodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that all Node elements referred by Edge elements belonging to this pattern as their source node, exist.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Output/utql:Edge"/>
+                    <field xpath="@source"/>
+                </keyref>
+                <keyref name="QueryOutputDestNodeNameKeyRef" refer="utql:QueryNodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that all Node elements referred by Edge elements belonging to this pattern as their destination node, exist.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Output/utql:Edge"/>
+                    <field xpath="@destination"/>
+                </keyref>
+                <unique name="CorrespondenceIDKey">
+                    <annotation>
+                        <documentation>Ensure that all Correspondence elements have a unique name, if defined.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Constraints/utql:Correspondence"/>
+                    <field xpath="@name"/>
+                </unique>
+                <key name="CorrespondenceNodeKey">
+                    <annotation>
+                        <documentation>Ensure that all nodes within a certain Correspondence element have a unique node reference.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Constraints/utql:Correspondence/utql:Node"/>
+                    <field xpath="@node-ref"/>
+                </key>
+                <keyref name="CorrespondenceNodeKeyRef" refer="utql:QueryInputNodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that all nodes referenced from within a Correspondence element really exist in the input section of this pattern.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Constraints/utql:Correspondence/utql:Node"/>
+                    <field xpath="@node-ref"/>
+                </keyref>
+                <key name="CorrespondenceEdgeKey">
+                    <annotation>
+                        <documentation>Ensure that all edges within a certain Correspondence element have a unique edge reference.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Constraints/utql:Correspondence/utql:Edge"/>
+                    <field xpath="@edge-ref"/>
+                </key>
+                <keyref name="CorrespondenceEdgeKeyRef" refer="utql:QueryInputEdgeNameKey">
+                    <annotation>
+                        <documentation>Ensure that all edges referenced from within a Correspondence element really exist in the input section of this pattern.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Constraints/utql:Correspondence/utql:Edge"/>
+                    <field xpath="@edge-ref"/>
+                </keyref>
+                <key name="TriggerGroupEdgeKey">
+                    <annotation>
+                        <documentation>Ensure that all edges within a certain TriggerGroup element have a unique edge reference.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Constraints/utql:TriggerGroup/utql:Edge"/>
+                    <field xpath="@edge-ref"/>
+                </key>
+                <keyref name="TriggerGroupEdgeKeyRef" refer="utql:QueryEdgeNameKey">
+                    <annotation>
+                        <documentation>Ensure that all edges referenced from within a TriggerGroup element really exist in the input or output section of this pattern.</documentation>
+                    </annotation>
+                    <selector xpath="utql:Constraints/utql:TriggerGroup/utql:Edge"/>
+                    <field xpath="@edge-ref"/>
+                </keyref>
+            </element>
+        </sequence>
+        <attribute name="name" type="utql:IDType"/>
+    </complexType>
+    
+    <complexType name="UTQLResponseType">
+        <sequence>
+            <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+            <element name="Pattern" type="utql:ResponsePatternType" minOccurs="0" maxOccurs="unbounded">
+                <key name="EdgeNameKey">
+                    <annotation>
+                        <documentation>Ensure that each Edge element belonging to this pattern has a unique name.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Input/utql:Edge|utql:Output/utql:Edge"/>
+                    <field xpath="@name"/>
+                </key>
+                
+                <key name="NodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that each Node element belonging to this pattern has a unique name.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Input/utql:Node|utql:Output/utql:Node"/>
+                    <field xpath="@name"/>
+                </key>
+                <key name="InputNodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that each Node element belonging to the Input element of this pattern has a unique name. This is redundant because key NodeNameKey also includes the nodes referred here, but we need this key nevertheless it in order to ensure that edges in the Input element only refer Nodes from the Input element as their source or destination. See also below.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Input/utql:Node"/>
+                    <field xpath="@name"/>
+                </key>
+                <keyref name="InputSourceNodeNameKeyRef" refer="utql:InputNodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that all Node elements referred by Edge elements belonging to the Input element of this pattern as their source node, exist in this Input element, too.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Input/utql:Edge"/>
+                    <field xpath="@source"/>
+                </keyref>
+                <keyref name="InputDestNodeNameKeyRef" refer="utql:InputNodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that all Node elements referred by Edge elements belonging to the Input element of this pattern as their destination node, exist in this Input element, too.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Input/utql:Edge"/>
+                    <field xpath="@destination"/>
+                </keyref> 
+                <keyref name="OutputSourceNodeNameKeyRef" refer="utql:NodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that all Node elements referred by Edge elements belonging to this pattern as their source node, exist.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Output/utql:Edge"/>
+                    <field xpath="@source"/>
+                </keyref>
+                <keyref name="OutputDestNodeNameKeyRef" refer="utql:NodeNameKey">
+                    <annotation>
+                        <documentation>Ensure that all Node elements referred by Edge elements belonging to this pattern as their destination node, exist.</documentation>
+                    </annotation>
+                    
+                    <selector xpath="utql:Output/utql:Edge"/>
+                    <field xpath="@destination"/>
+                </keyref> 
+            </element>
+        </sequence>
+        <attribute name="name" type="utql:IDType"/>
+    </complexType>
+    
+    
+    
+    <complexType name="AbstractPatternType">
+        <annotation>
+            <documentation>Base type for both types of patterns, request patterns and response patterns</documentation>
+        </annotation>
+        
+        <sequence>
+            <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+        </sequence>
+        <attribute name="name" type="utql:IDType" use="required"/>
+        <attribute name="displayName" type="string"/>
+    </complexType>
+    
+    <complexType name="RequestPatternType">
+        <annotation>
+            <documentation>Each query pattern has a name attribute and optionally, an id attribute which may be used for reconstruction of edge dependencies without actually evaluating the edge predicate. It contains at most one Input element, at most one Output element and at most one dataflow configuration element of each type (e.g. DataflowConfiguration and/or UbitrackDataflowConfiguration).</documentation>
+        </annotation>
+        
+        <complexContent>
+            <extension base="utql:AbstractPatternType">
+                <sequence minOccurs="1">
+                    <element minOccurs="0" name="Input" type="utql:RequestInputType" />
+                    <element minOccurs="0" name="Output" type="utql:RequestOutputType" />
+                    <element minOccurs="0" name="Constraints" type="utql:ConstraintsType" />
+                    <element minOccurs="0" name="DataflowConfiguration" type="utql:DataflowConfigurationType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ResponsePatternType">
+        <annotation>
+            <documentation>Each query pattern has a name attribute and optionally, an id attribute which may be used for reconstruction of edge dependencies without actually evaluating the edge predicate. It contains at most one Input element, at most one Output element and at most one dataflow configuration element of each type (e.g. DataflowConfiguration and/or UbitrackDataflowConfiguration).</documentation>
+        </annotation>
+        
+        <complexContent>
+            <extension base="utql:AbstractPatternType">
+                <sequence minOccurs="1">
+                    <element minOccurs="0" name="Input" type="utql:ResponseInputType" />
+                    <element minOccurs="0" name="Output" type="utql:ResponseOutputType" />
+                    <element minOccurs="0" name="DataflowConfiguration" type="utql:DataflowConfigurationType"/>
+                </sequence>
+                <attribute name="id" type="utql:IDType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    
+    
+    <complexType name="RequestInputType">
+        <annotation>
+            <documentation>The Input element consists of at least one Node element of type QueryNodeType, followed by an arbitrary number of Edge elements followed by QueryEdgeType.</documentation>
+        </annotation>
+        
+        <sequence>
+            <element name="Node" maxOccurs="unbounded" type="utql:RequestQueryNodeType"/>
+            <element name="Edge" maxOccurs="unbounded" minOccurs="0" type="utql:QueryEdgeType"/>
+        </sequence>
+    </complexType>
+    
+    <complexType name="RequestOutputType">
+        <annotation>
+            <documentation>The Output element consists of at least one Node element, followed by an arbitrary number of Edge elements.</documentation>
+        </annotation>
+        
+        <sequence>
+            <element name="Node" maxOccurs="unbounded" minOccurs="0" type="utql:RequestOutputNodeType"/>
+            <element name="Edge" maxOccurs="unbounded" minOccurs="0" type="utql:OutputEdgeType"/>
+        </sequence>
+    </complexType>
+    
+    <complexType name="ResponseInputType">
+        <annotation>
+            <documentation>The Input element consists of at least one Node element, followed by an arbitrary number of Edge elements. Both nodes and edges are already resolved, thus do not contain Predicate elements. See ResolvedNodeType and ResolvedEdgeType for further information.</documentation>
+        </annotation>
+        
+        <sequence>
+            <element name="Node" maxOccurs="unbounded" type="utql:ResponseInputNodeType"/>
+            <element name="Edge" maxOccurs="unbounded" minOccurs="0" type="utql:ResolvedEdgeType"/>
+        </sequence>
+    </complexType>
+    
+    <complexType name="ResponseOutputType">
+        <annotation>
+            <documentation>The Output element consists of an arbitrary number Node elements, followed by an arbitrary number of Edge elements.</documentation>
+        </annotation>
+        
+        <sequence>
+            <element name="Node" maxOccurs="unbounded" minOccurs="0" type="utql:ResponseOutputNodeType"/>
+            <element name="Edge" maxOccurs="unbounded" minOccurs="0" type="utql:OutputEdgeType"/>
+        </sequence>
+    </complexType>
+    
+    
+    
+    <complexType name="AbstractNodeType" abstract="true">
+        <annotation>
+            <documentation>Abstract base type for all Node elements. Each node has a name attribute that is unique throughout the pattern it belongs to.</documentation>
+        </annotation>
+        
+        <sequence>
+            <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+            <element name="GuiPos" minOccurs="0" type="utql:GuiCoordType"/>
+        </sequence>
+        <attribute name="name" type="utql:IDType" use="required"/>
+        <attribute name="displayName" type="string"/>
+    </complexType>
+    
+    <complexType name="RequestQueryNodeType">
+        <annotation>
+            <documentation>Node type used for querying nodes already available in the world SRG, contained in the UTQLRequest/Pattern/Input element. In addition to the features of all nodes, it contains a sequence of Predicate elements that restrict the matching of this node against other nodes contained in the Output element of previously registered patterns.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <extension base="utql:AbstractNodeType">
+                <sequence>
+                    <element name="Predicate" minOccurs="0" maxOccurs="1" type="string"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="RequestOutputNodeType">
+        <annotation>
+            <documentation>Node type used registering new nodes in the world SRG, contained in the UTQLRequest/Pattern/Output element. In addition to the features of all nodes, it is being assigned a globally unique ID and a list of attributes. In case more than one nodes with the same ID are registered, those nodes will be considered to be the same and their attributes will be merged.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <extension base="utql:AbstractNodeType">
+                <choice maxOccurs="unbounded">
+                    <element name="Attribute" minOccurs="0" maxOccurs="unbounded" type="utql:AttributeType"/>
+                </choice>
+                <attribute name="id" type="utql:IDType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="AbstractResponseNodeType" abstract="true">
+        <annotation>
+            <documentation>Abstract base type of Node elements used in UTQLResponse elements. Each such node has a list of attributes.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <extension base="utql:AbstractNodeType">
+                <sequence>
+                    <element name="Attribute" minOccurs="0" maxOccurs="unbounded" type="utql:AttributeType"/>
+                </sequence>
+            </extension>
+        </complexContent>        
+    </complexType>
+    
+    <complexType name="ResponseInputNodeType">
+        <annotation>
+            <documentation>Each such Node has a globally unique id attribute which references a particular Node of type ResponseOutputNodeType (corresponding to one particular node in the world SRG) which also has to be contained in the same UTQLResponse and carry the same id. Nodes of type RequestQueryNodeType that matches a Node of Type RequestOutputNodeType in a UTQLRequest becomes a Node of ResponseInputNodeType. In one UTQLResponse, there may be one or more Node elements of type RequestInputNodeType that refer to one single Node of type ResponseOutputNodeType.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <extension base="utql:AbstractResponseNodeType">
+                <attribute name="id" type="utql:IDType" use="required"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ResponseOutputNodeType">
+        <annotation>
+            <documentation>Each such Node has a globally unique id and corresponds to exactly one node in the world SRG. There may be only one Node of this type with a certain id.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <extension base="utql:AbstractResponseNodeType">
+                <attribute name="id" type="utql:IDType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    
+    
+    <complexType name="AbstractEdgeType" abstract="true">
+        <annotation>
+            <documentation>An edge has a mandatory name attribute that is unique throughout the Pattern it belongs to. The source and destination attributes denote Node elements contained in either the Input or the Output element belonging to the pattern element in which this Edge is contained.</documentation>
+        </annotation>
+        
+        <sequence>
+            <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+            <element name="GuiLandmark" type="utql:GuiCoordType" minOccurs="0"/>
+            <element name="GuiLabelPos" type="utql:GuiCoordType" minOccurs="0"/>
+        </sequence>
+        <attribute name="name" type="utql:IDType" use="required"/>
+        <attribute name="source" type="utql:IDType" use="required"/>
+        <attribute name="destination" type="utql:IDType" use="required"/>
+        <attribute name="displayName" type="string"/>
+    </complexType>
+    
+    <complexType name="QueryEdgeType">
+        <annotation>
+            <documentation> An edge query element contained in an Input element, in addition to the properties shared with all edges, contains a sequence of Predicate elements that restrict matching of this edge against other edges contained in the Output element of previously registered subgtraphs. This restricts the characteristics of potential dataflow networks.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <extension base="utql:AbstractEdgeType">
+                <sequence>
+                    <element name="Predicate" minOccurs="0" maxOccurs="1" type="string"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ResolvedEdgeType">
+        <annotation>
+            <documentation>An edge reference element contained in an Input element. In addition to the properties shared with all edges, it contains the pattern-ref and edge-ref attribute which refer to another pattern and the corresponding edge contained in the referenced pattern's Output element. This defines the dependencies of the dataflow network. A match of an Edge of type QueryEdgeType may become an edge of type ResolvedEdgeType.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <extension base="utql:AbstractEdgeType">
+                <sequence>
+                    <element name="Attribute" minOccurs="0" maxOccurs="unbounded" type="utql:AttributeType"/>
+                </sequence>
+                <attribute name="pattern-ref" type="utql:IDType" use="required"/>
+                <attribute name="edge-ref" type="utql:IDType" use="required"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="OutputEdgeType">
+        <annotation>
+            <documentation>An Edge element contained in an Ouput element, in addition to the properties shared with all edges, may contain an arbitrary number of Attribute elements.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <extension base="utql:AbstractEdgeType">
+                <choice maxOccurs="unbounded">
+                    <element name="Attribute" minOccurs="0" maxOccurs="unbounded" type="utql:AttributeType"/>
+                </choice>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    
+    
+    <complexType name="ConstraintsType">
+        <annotation>
+            <documentation>Information that constrains the degrees of freedom in matching the inuput section of a pattern.</documentation>
+        </annotation>
+        
+        <sequence minOccurs="0">
+            <element name="OnlyBestEdgeMatch" minOccurs="0"/>
+            <element name="Correspondence" minOccurs="0" maxOccurs="unbounded">
+                <complexType>
+                    <sequence>
+                        <element name="Node" minOccurs="0" maxOccurs="unbounded" type="utql:NodeRefType"/>
+                        <element name="Edge" minOccurs="0" maxOccurs="unbounded" type="utql:EdgeRefType"/>
+                    </sequence>
+                    <attribute name="name" type="utql:IDType"/>
+                    <attribute name="minMultiplicity" type="integer"/>
+                    <attribute name="maxMultiplicity" type="integer"/>
+                    <attribute name="stepSize" type="integer"/>
+                </complexType>
+            </element>
+            <element name="TriggerGroup" minOccurs="0">
+                <complexType>
+                    <sequence>
+                        <element name="Edge" minOccurs="0" maxOccurs="unbounded" type="utql:EdgeRefType"/>
+                    </sequence>
+                </complexType>
+            </element>
+        </sequence>
+    </complexType>
+    
+    <complexType name="NodeRefType">
+        <attribute name="node-ref" use="required" type="utql:IDType"/>
+    </complexType>
+    
+    <complexType name="EdgeRefType">
+        <attribute name="edge-ref" use="required" type="utql:IDType"/>
+    </complexType>
+    
+    <complexType name="DescriptionType">
+        <annotation>
+            <documentation>Defines the layout of an element's description in arbitrary XHTML. Once a final XHTML XML schema is provided at http://www.w3.org/1999/xhtml.xsd, the preliminary location has to be updated</documentation>
+        </annotation>
+        
+        <sequence>
+            <element minOccurs="0" ref="html:p"/>
+        </sequence>
+    </complexType>
+    
+    
+    
+    <complexType name="AttributeType">
+        <annotation>
+            <documentation>Generic attribute type with an attribute name and the corresponding value. The latter can be set directly on the optional value attribute (for short strings) or as arbitrary XML content.</documentation>
+        </annotation>
+        
+        <sequence>
+            <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+            <element name="Value" minOccurs="0" type="utql:ArbitraryXmlValueType"/>
+        </sequence>
+        <attribute name="name" type="string" use="required"/>
+        <attribute name="displayName" type="string"/>
+        <attribute name="value" type="string"/>
+    </complexType>
+    
+    <complexType name="ArbitraryXmlValueType">
+        <complexContent mixed="true">
+            <restriction base="anyType">
+                <sequence>
+                    <any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+
+    
+    
+    <simpleType name="IDType">
+        <annotation>
+            <documentation>Type which ensures that an ID is always valid.</documentation>
+        </annotation>
+        
+        <restriction base="string">
+            <minLength value="1"/>
+        </restriction>
+    </simpleType>
+    
+    
+    
+    <complexType name="GuiCoordType">
+        <annotation>
+            <documentation>Type for storing display coordinates, used for storing the positions of nodes and edges.</documentation>
+        </annotation>
+        
+        <attribute name="x" type="short" use="required"/>
+        <attribute name="y" type="short" use="required"/>
+    </complexType>
+    
+    
+    
+    <complexType name="DataflowConfigurationType">
+        <sequence>
+            <element name="UbitrackLib">
+                <complexType>
+                    <attribute name="class" type="utql:IDType"/>
+                </complexType>
+            </element>
+            <choice maxOccurs="unbounded">
+                <element name="Attribute" minOccurs="0" maxOccurs="unbounded" type="utql:AttributeType"/>
+            </choice>
+        </sequence>
+    </complexType>
+</schema>

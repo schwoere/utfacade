@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{685EC9BC-0FC8-46BA-9AC1-36EC771448E1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UbitrackDotNet</RootNamespace>
+    <AssemblyName>UbitrackDotNet</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release_unity\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoStdLib>true</NoStdLib>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleApplicationPullSinkPose.cs">
+      <Link>SimpleApplicationPullSinkPose.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleApplicationPullSinkErrorPose.cs">
+      <Link>SimpleApplicationPullSinkErrorPose.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleApplicationPullSinkErrorPosition3D.cs">
+      <Link>SimpleApplicationPullSinkErrorPosition3D.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleApplicationPullSinkErrorPositionList3D.cs">
+      <Link>SimpleApplicationPullSinkErrorPositionList3D.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleMatrix3x3.cs">
+      <Link>SimpleMatrix3x3.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleApplicationPullSinkMatrix3x3.cs">
+      <Link>SimpleApplicationPullSinkMatrix3x3.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleApplicationPullSinkMatrix4x4.cs">
+      <Link>SimpleApplicationPullSinkMatrix4x4.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleApplicationPullSinkPosition3D.cs">
+      <Link>SimpleApplicationPullSinkPosition3D.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleApplicationPullSinkPositionList3D.cs">
+      <Link>SimpleApplicationPullSinkPositionList3D.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleButton.cs">
+      <Link>SimpleButton.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleButtonReceiver.cs">
+      <Link>SimpleButtonReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleDataflowObserver.cs">
+      <Link>SimpleDataflowObserver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleErrorPose.cs">
+      <Link>SimpleErrorPose.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleErrorPoseReceiver.cs">
+      <Link>SimpleErrorPoseReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleDistance.cs">
+      <Link>SimpleDistance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleDistanceReceiver.cs">
+      <Link>SimpleDistanceReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleFacade.cs">
+      <Link>SimpleFacade.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleImage.cs">
+      <Link>SimpleImage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleImageReceiver.cs">
+      <Link>SimpleImageReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleMatrix3x4.cs">
+      <Link>SimpleMatrix3x4.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleMatrix3x4Receiver.cs">
+      <Link>SimpleMatrix3x4Receiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleMatrix4x4.cs">
+      <Link>SimpleMatrix4x4.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleMatrix4x4Receiver.cs">
+      <Link>SimpleMatrix4x4Receiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePose.cs">
+      <Link>SimplePose.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePoseReceiver.cs">
+      <Link>SimplePoseReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleStringReceiver.cs">
+      <Link>SimpleStringReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePosition2D.cs">
+      <Link>SimplePosition2D.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePosition2DReceiver.cs">
+      <Link>SimplePosition2DReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePosition2DList.cs">
+      <Link>SimplePosition2DList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePosition2DListReceiver.cs">
+      <Link>SimplePosition2DListReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePosition2DValue.cs">
+      <Link>SimplePosition2DValue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePosition2DValue_Vector.cs">
+      <Link>SimplePosition2DValue_Vector.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePosition3D.cs">
+      <Link>SimplePosition3D.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePositionList3D.cs">
+      <Link>SimplePositionList3D.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePositionList3DReceiver.cs">
+      <Link>SimplePositionList3DReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePosition3DReceiver.cs">
+      <Link>SimplePosition3DReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePosition3DValue.cs">
+      <Link>SimplePosition3DValue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimplePosition3DValue_Vector.cs">
+      <Link>SimplePosition3DValue_Vector.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SWIGTYPE_p_unsigned_char.cs">
+      <Link>SWIGTYPE_p_unsigned_char.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleErrorPosition3D.cs">
+      <Link>SimpleErrorPosition3D.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleErrorPosition3DReceiver.cs">
+      <Link>SimpleErrorPosition3DReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleErrorPositionList3D.cs">
+      <Link>SimpleErrorPositionList3D.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleErrorPositionList3DReceiver.cs">
+      <Link>SimpleErrorPositionList3DReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleErrorPosition3DValue.cs">
+      <Link>SimpleErrorPosition3DValue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SimpleErrorPosition3DValue_Vector.cs">
+      <Link>SimpleErrorPosition3DValue_Vector.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\SWIGTYPE_p_double.cs">
+      <Link>SWIGTYPE_p_double.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\byteArrayClass.cs">
+      <Link>byteArray.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\doubleArrayClass.cs">
+      <Link>doubleArray.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\ubitrack.cs">
+      <Link>ubitrack.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\build\x86\rls\modules\utfacade\apps\DotNet\ubitrackPINVOKE.cs">
+      <Link>ubitrackPINVOKE.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

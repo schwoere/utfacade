@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : GlobalAttrSpec.xml
+    Created on : September 24, 2007, 01:54 PM
+    Author     : Peter Keitler
+    Description: Global attribute specifications needed by different pattern templates specified in different files.
+    Do not change the sequence of the attribute declarations in this file and always append new attributes below since they are 
+    referenced from pattern template files by their index.
+-->
+
+<UTQLAttributes xmlns='http://ar.in.tum.de/ubitrack/utql'
+                xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+                xmlns:xi="http://www.w3.org/2001/XInclude"
+                xmlns:h="http://www.w3.org/1999/xhtml"
+                xsi:schemaLocation='http://ar.in.tum.de/ubitrack/utql http://ar.in.tum.de/files/ubitrack/utql/utql_templates.xsd'>
+    
+    
+    <GlobalNodeAttributeDeclarations>
+        <Attribute name="artPort" displayName="A.R.T. UDP port" min="1" max="65535" default="5000" xsi:type="IntAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">UDP port used by A.R.T. system (configured in DTrack software)</p></Description>
+        </Attribute>
+		
+        <Attribute name="rgba" displayName="RGBA value" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">RGBA color value. The individual color values are between 0.0 and 1.0.</p></Description>
+            <DoubleValue name="red" displayName="Red" default="1.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Red</p></Description>
+            </DoubleValue>
+            <DoubleValue name="green" displayName="Green" default="1.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Green</p></Description>
+            </DoubleValue>
+            <DoubleValue name="blue" displayName="Blue" default="1.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Blue</p></Description>
+            </DoubleValue>
+            <DoubleValue name="alpha" displayName="Alpha" default="1.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Alpha</p></Description>
+            </DoubleValue>
+        </Attribute>
+
+        <Attribute name="resolution" displayName="Image resolution" xsi:type="IntArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Image resolution</p></Description>
+            <IntValue name="width" displayName="Width" default="640">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Width</p></Description>
+            </IntValue>
+            <IntValue name="height" displayName="Height" default="480">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Height</p></Description>
+            </IntValue>
+        </Attribute>
+		
+		<Attribute name="udpPort" displayName="General UDP port" min="1" max="65535" default="5000" xsi:type="IntAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">UDP port used by the system</p></Description>
+        </Attribute>
+    </GlobalNodeAttributeDeclarations>
+    
+    <GlobalEdgeAttributeDeclarations>
+        <Attribute name="type" displayName="Transformation type" constant="true" default="6D" xsi:type="EnumAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">An input edge must always have the same type of transformation as the output edge it shall be matched against</p></Description>
+            <EnumValue name="6D" displayName="6 DOF"/>
+            <EnumValue name="3DPosition" displayName="3 DOF Position"/>
+            <EnumValue name="3DRotation" displayName="3 DOF Rotation"/>
+            <EnumValue name="4DVector" displayName="4-Vector">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">"4 element vector"</p></Description>
+            </EnumValue>
+            <EnumValue name="Image" displayName="Image">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Image Measurement</p></Description>
+            </EnumValue>
+            <EnumValue name="3x3Matrix" displayName="3x3-Matrix">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Transformation matrix with 3x3 elements</p></Description>
+            </EnumValue>
+            <EnumValue name="4x4Matrix" displayName="4x4-Matrix">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Transformation matrix with 4x4 elements</p></Description>
+            </EnumValue>
+            <EnumValue name="Matrix3x4" displayName="3x4-Matrix">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Projection matrix with 3x4 elements</p></Description>
+            </EnumValue>
+            <EnumValue name="PoseList" displayName="6 DOF pose list"/>
+			<EnumValue name="3DPositionList" displayName="3D position list"/>
+            <EnumValue name="2DPositionList" displayName="2D position list"/>			
+			<EnumValue name="3DErrorPositionList" displayName="3D Error position list"/>
+            <EnumValue name="2DErrorPositionList" displayName="2D Error position list"/>
+            <EnumValue name="DistanceList" displayName="Distance list"/>
+            <EnumValue name="Button" displayName="Signal/Selection"/>
+            <EnumValue name="RotationVelocity" displayName="Rotation velocity"/>
+            <EnumValue name="6DError" displayName="6DOF pose with covariance">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">6DOF pose with 6x6 covariance matrix</p></Description>
+            </EnumValue>
+            <EnumValue name="3DPositionError" displayName="3D position with covariance">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">3DOF position with 3x3 covariance matrix</p></Description>
+            </EnumValue>
+            <EnumValue name="Distance" displayName="1D distance value"/>
+            <EnumValue name="2DPosition" displayName="2 DOF Position"/>
+            <EnumValue name="Intrinsics" displayName="Camera Intrinsic Parameters">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Camera projection matrix, distortion coefficients, image size, and reprojection residual error</p></Description>
+            </EnumValue>
+        </Attribute>
+        
+        <Attribute name="mode" displayName="Synchronization mode" constant="true" default="push" xsi:type="EnumAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">An input edge must always have the same synchronization mode as the output edge it shall be matched against</p></Description>
+            <EnumValue name="push" displayName="Push"/>
+            <EnumValue name="pull" displayName="Pull"/>
+        </Attribute>
+        
+        <Attribute name="static" displayName="static" constant="true" default="false" xsi:type="EnumAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Determines whether the edge changes over time</p></Description>
+            <EnumValue name="false" displayName="False"/>
+            <EnumValue name="true" displayName="True"/>
+        </Attribute>
+        
+        <Attribute name="staticPosition" displayName="Static position" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Static 3D position vector</p></Description>
+            <DoubleValue name="x" displayName="x" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">x component of translation</p></Description>
+            </DoubleValue>
+            <DoubleValue name="y" displayName="y" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">y component of translation</p></Description>
+            </DoubleValue>
+            <DoubleValue name="z" displayName="z" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">z component of translation</p></Description>
+            </DoubleValue>
+        </Attribute>
+        
+        <Attribute name="staticRotation" displayName="Static orientation" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Static orientation quaternion</p></Description>
+            <DoubleValue name="x" displayName="x" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">x component of quaternion</p></Description>
+            </DoubleValue>
+            <DoubleValue name="y" displayName="y" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">y component of quaternion</p></Description>
+            </DoubleValue>
+            <DoubleValue name="z" displayName="z" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">z component of quaternion</p></Description>
+            </DoubleValue>
+            <DoubleValue name="w" displayName="w" default="1.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">w comopnent of quaternion</p></Description>
+            </DoubleValue>
+        </Attribute>
+        
+        <Attribute name="staticVector4" displayName="Static 4-vector" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Static 4-vector</p></Description>
+            <DoubleValue name="a" displayName="a" default="0.0"/>
+            <DoubleValue name="b" displayName="b" default="0.0"/>
+            <DoubleValue name="c" displayName="c" default="0.0"/>
+            <DoubleValue name="d" displayName="d" default="0.0"/>
+        </Attribute>
+        
+        <Attribute name="staticMatrix3x3" displayName="Static 3x3 matrix" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Contains the 3x3 matrix as a 12-element space-separated string with
+            row-wise linearization.</p></Description>
+            <DoubleValue name="a11" displayName="a11" default="0.0"/>
+            <DoubleValue name="a12" displayName="a12" default="0.0"/>
+            <DoubleValue name="a13" displayName="a13" default="0.0"/>
+            <DoubleValue name="a21" displayName="a21" default="0.0"/>
+            <DoubleValue name="a22" displayName="a22" default="0.0"/>
+            <DoubleValue name="a23" displayName="a23" default="0.0"/>
+            <DoubleValue name="a31" displayName="a31" default="0.0"/>
+            <DoubleValue name="a32" displayName="a32" default="0.0"/>
+            <DoubleValue name="a33" displayName="a33" default="0.0"/>
+        </Attribute>
+        
+        <Attribute name="staticMatrix3x4" displayName="Static 3x4 matrix" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Contains the 3x4 matrix as a 12-element space-separated string with
+            row-wise linearization.</p></Description>
+            <DoubleValue name="a11" displayName="a11" default="0.0"/>
+            <DoubleValue name="a12" displayName="a12" default="0.0"/>
+            <DoubleValue name="a13" displayName="a13" default="0.0"/>
+            <DoubleValue name="a14" displayName="a14" default="0.0"/>
+            <DoubleValue name="a21" displayName="a21" default="0.0"/>
+            <DoubleValue name="a22" displayName="a22" default="0.0"/>
+            <DoubleValue name="a23" displayName="a23" default="0.0"/>
+            <DoubleValue name="a24" displayName="a24" default="0.0"/>
+            <DoubleValue name="a31" displayName="a31" default="0.0"/>
+            <DoubleValue name="a32" displayName="a32" default="0.0"/>
+            <DoubleValue name="a33" displayName="a33" default="0.0"/>
+            <DoubleValue name="a34" displayName="a34" default="0.0"/>
+        </Attribute>
+        
+        <Attribute name="staticMatrix4x4" displayName="Static 4x4 matrix" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Contains the 4x4 matrix as a 12-element space-separated string with row-wise linearization.</p></Description>
+            <DoubleValue name="a11" displayName="a11" default="0.0"/>
+            <DoubleValue name="a12" displayName="a12" default="0.0"/>
+            <DoubleValue name="a13" displayName="a13" default="0.0"/>
+            <DoubleValue name="a14" displayName="a14" default="0.0"/>
+            <DoubleValue name="a21" displayName="a21" default="0.0"/>
+            <DoubleValue name="a22" displayName="a22" default="0.0"/>
+            <DoubleValue name="a23" displayName="a23" default="0.0"/>
+            <DoubleValue name="a24" displayName="a24" default="0.0"/>
+            <DoubleValue name="a31" displayName="a31" default="0.0"/>
+            <DoubleValue name="a32" displayName="a32" default="0.0"/>
+            <DoubleValue name="a33" displayName="a33" default="0.0"/>
+            <DoubleValue name="a34" displayName="a34" default="0.0"/>
+            <DoubleValue name="a41" displayName="a41" default="0.0"/>
+            <DoubleValue name="a42" displayName="a42" default="0.0"/>
+            <DoubleValue name="a43" displayName="a43" default="0.0"/>
+            <DoubleValue name="a44" displayName="a44" default="0.0"/>
+        </Attribute>
+        
+        <Attribute name="staticPosition2D" displayName="Static 2D position" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Static 2D position vector</p></Description>
+            <DoubleValue name="x" displayName="x" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">x component of translation</p></Description>
+            </DoubleValue>
+            <DoubleValue name="y" displayName="y" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">y component of translation</p></Description>
+            </DoubleValue>
+        </Attribute>
+        
+        <Attribute name="staticDistance" displayName="Static scalar distance" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Static scalar distance value</p></Description>
+            <DoubleValue name="d" displayName="d" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">scalar value</p></Description>
+            </DoubleValue>
+        </Attribute>
+		
+        <Attribute name="button" displayName="Keycode" default=" " xsi:type="StringAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">The keyboard character associated with the signal event. Defaults to the <h:code>space</h:code> charachter.</p></Description>
+        </Attribute>
+
+        <Attribute name="staticPose" displayName="Static pose" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Static pose vector</p></Description>
+            <DoubleValue name="tx" displayName="tx" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">x component of translation</p></Description>
+            </DoubleValue>
+            <DoubleValue name="ty" displayName="ty" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">y component of translation</p></Description>
+            </DoubleValue>
+            <DoubleValue name="tz" displayName="tz" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">z component of translation</p></Description>
+            </DoubleValue>
+			<DoubleValue name="qx" displayName="qx" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">x component of quaternion</p></Description>
+            </DoubleValue>
+			<DoubleValue name="qy" displayName="qy" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">y component of quaternion</p></Description>
+            </DoubleValue>
+			<DoubleValue name="qz" displayName="qz" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">z component of quaternion</p></Description>
+            </DoubleValue>
+			<DoubleValue name="qw" displayName="qw" default="1.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">w component of quaternion</p></Description>
+            </DoubleValue>
+        </Attribute>
+
+    </GlobalEdgeAttributeDeclarations>
+    
+    <GlobalDataflowAttributeDeclarations>
+        <Attribute name="visible" displayName="visible" default="true" xsi:type="EnumAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Determines if the pattern is visible or hidden in the graph</p></Description>
+            <EnumValue name="false" displayName="false"/>
+            <EnumValue name="true" displayName="true"/>
+        </Attribute>
+        
+        <Attribute name="expansion" displayName="Expansion type" default="time" constant="true" xsi:type="EnumAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">The type of expansion of a correspondence (space or time)</p></Description>
+            <EnumValue name="time" displayName="Time Expansion"/>
+            <EnumValue name="space" displayName="Space Expansion"/>
+        </Attribute>
+        
+        <Attribute name="position" displayName="Expected position" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Expectation value of the 3D position</p></Description>
+            <DoubleValue name="x" displayName="x" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">x component of translation</p></Description>
+            </DoubleValue>
+            <DoubleValue name="y" displayName="y" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">y component of translation</p></Description>
+            </DoubleValue>
+            <DoubleValue name="z" displayName="z" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">z component of translation</p></Description>
+            </DoubleValue>
+        </Attribute>
+        
+        <Attribute name="rotation" displayName="Expected orientation" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">Expectation value of the orientation given as quaternion</p></Description>
+            <DoubleValue name="x" displayName="x" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">x component of quaternion</p></Description>
+            </DoubleValue>
+            <DoubleValue name="y" displayName="y" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">y component of quaternion</p></Description>
+            </DoubleValue>
+            <DoubleValue name="z" displayName="z" default="0.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">z component of quaternion</p></Description>
+            </DoubleValue>
+            <DoubleValue name="w" displayName="w" default="1.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">w comopnent of quaternion</p></Description>
+            </DoubleValue>
+        </Attribute>
+        
+        <Attribute name="button" displayName="Signal" default=" " xsi:type="StringAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">The keyboard character associated with the signal event. Defaults to the <h:code>space</h:code> charachter.</p></Description>
+        </Attribute>
+
+        <Attribute name="rgba" displayName="RGBA value" xsi:type="DoubleArrayAttributeDeclarationType">
+            <Description><p xmlns="http://www.w3.org/1999/xhtml">RGBA color value. The individual color values are between 0.0 and 1.0.</p></Description>
+            <DoubleValue name="red" displayName="Red" default="1.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Red</p></Description>
+            </DoubleValue>
+            <DoubleValue name="green" displayName="Green" default="1.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Green</p></Description>
+            </DoubleValue>
+            <DoubleValue name="blue" displayName="Blue" default="1.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Blue</p></Description>
+            </DoubleValue>
+            <DoubleValue name="alpha" displayName="Alpha" default="1.0">
+                <Description><p xmlns="http://www.w3.org/1999/xhtml">Alpha</p></Description>
+            </DoubleValue>
+        </Attribute>
+        <Attribute name="event" displayName="Keycode" default=" " xsi:type="StringAttributeDeclarationType">
+            <Description><h:p>The button event (keycode), defaults to the space bar. Enter only one character here.</h:p></Description>
+        </Attribute>
+
+    </GlobalDataflowAttributeDeclarations>
+    
+</UTQLAttributes>

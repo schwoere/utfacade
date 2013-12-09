@@ -1,0 +1,77 @@
+import os
+import glob
+Import( '*' )
+
+if not have_swig:
+	print ("Not building Java wrapper: SWIG not available")
+elif not have_java:
+	print ("Not building Java wrapper: Java SDK not available")
+else:
+	print
+	print ("NOTE: Build target 'java-wrapper' twice such that ubitrack.jar contains all generated classes.")
+	print
+	
+	# Create our own construction environment. The part related to Java and JNI is already configured in java_env. Thus we do not
+	# start with masterEnv, like other scripts do.
+	env = java_env.Clone()
+
+	buildDir = env.Dir('.')
+	srcDir = buildDir.srcnode()
+
+	# Needed for python/java wrappers in combination with builts
+	# in release mode (thus using one of -O2, -O3 or -Os, in case RELEASE_DEBUG=false, strict-aliasing is
+	# therefore disabled anyways)
+	# See also http://www.swig.org/Release/CHANGES, entry for 03/02/2006
+	if 'gcc' in env[ 'TOOLS' ]:
+		env.AppendUnique( CCFLAGS = env['CCFLAGS'] + ['-fno-strict-aliasing'] )
+
+	env[ 'SWIGFLAGS' ] = [ '-v', '-c++', '-java', '-package', 'ubitrack', '-outdir', os.path.join( buildDir.abspath, "gensrc", "ubitrack") ]
+	env[ 'JARCHDIR' ]  = os.path.join( buildDir.path, 'classes' )
+	env[ 'JAVACLASSPATH' ] = os.path.join( buildDir.path, 'gensrc' )
+	config_options = mergeOptions( utfacade_all_options, utdataflow_all_options, utvision_all_options)
+	env.AppendUnique( **config_options )
+	env.AppendUnique( LIBS = boost_libs( [ 'thread' ] ) )
+
+	# Strange, but CXXFile() returns a list of C++ AND Java files
+	all_wrapper_sources = env.CXXFile( [ 'interface.i' ] )
+
+	# Create target directories for swig (env.CXXFile) manually since scons does not know about the java files
+	# in the first run
+	if not os.path.isdir(os.path.join( buildDir.abspath, 'gensrc', 'ubitrack' )):
+		if Execute( Mkdir(os.path.join( buildDir.abspath, 'gensrc', 'ubitrack' ))):
+			Exit(1)
+	if not os.path.isdir(os.path.join( buildDir.abspath, 'classes' )):
+		if Execute( Mkdir(os.path.join( buildDir.abspath, 'classes' ))):
+			Exit(1)
+
+	# Generic directory nodes for java and class files. They will be filled with the 
+	# first invocation of swig (env.CXXFile above)
+	java_wrapper_sources = env.Dir( os.path.join( buildDir.abspath, 'gensrc' ) )
+	java_wrapper_classes = env.Dir( os.path.join( buildDir.abspath, 'classes' ) )
+	
+	cpp_wrapper_sources = filter( lambda x: str( x ).endswith( ".cc" ), all_wrapper_sources )
+
+	lib_name = 'ubitrack_java'		
+	# target: build wrapper library (C++ part of wrapper)
+	wrapper_lib = env.SharedLibrary( lib_name, cpp_wrapper_sources )
+
+	# target: build wrapper jar (Java part of wrapper). This will only work in the second run
+	# because only then, scons can see theses files in the generic java_wrapper_sources node
+	# and add them to the jar command line.
+	env.Java( java_wrapper_classes, java_wrapper_sources )
+	jarlib_name = 'ubitrack'		
+	wrapper_jar = env.Jar( jarlib_name+'.jar', java_wrapper_classes )
+	
+	# target: install wrapper library 	
+	install_lib = installLibs( env, install_binary_prefix, '', wrapper_lib, True )
+	# target: install wrapper jar
+	install_jar = env.Install( install_library_prefix, wrapper_jar )
+
+	# define aliases for build targets (integrates our targets in the standard command-line targets)
+	Alias( [ 'all' ], [ wrapper_lib, wrapper_jar ] )
+	Alias( [ 'java-bindings' ], [ wrapper_lib, wrapper_jar ] )
+ 	Alias( [ 'install-all', 'install-java' ], [ install_lib, install_jar ] )
+	
+	# cleanup target: cleanup build directory on invocation of scons with the '-c' option on one of the targets specified in the
+	# first parameter
+	env.Clean( [ wrapper_lib ], buildDir )

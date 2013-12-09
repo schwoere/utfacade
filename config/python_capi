@@ -1,0 +1,53 @@
+import distutils.sysconfig, os, sys, platform
+
+#Import('configuration')
+
+# set variables
+python_capi_options = {}
+have_python_capi = True
+
+# find extension
+vars = distutils.sysconfig.get_config_vars()
+if vars.has_key( 'SO' ):
+	python_capi_options[ 'SHLIBSUFFIX' ] = vars[ 'SO' ]
+python_capi_options[ 'SHLIBPREFIX' ] = "" #gets rid of lib prefix
+
+# find python library
+pylib = None
+if vars.has_key( 'LDLIBRARY' ):
+	pylib = vars[ 'LDLIBRARY' ]
+	if pylib.startswith( 'lib' ):
+		pylib = pylib[ 3: ]
+	if pylib.endswith( '.so' ):
+		pylib = pylib[ : len( pylib ) - 3 ]
+	python_capi_options[ 'LIBS' ] = [ pylib ]
+
+python_capi_options[ 'CPPPATH' ] = [ distutils.sysconfig.get_python_inc() ]
+python_capi_options[ 'LIBPATH' ] = [ distutils.sysconfig.PREFIX + "/libs" ]
+
+# win32 fixes
+if sys.platform == 'win32':
+	python_capi_options[ 'CXXFLAGS' ] = [ '/Zm800', '/Ob0', '/EHsc', '/GR', '/Zc:forScope', '/Zc:wchar_t' ]
+
+# define build environment for check	
+Import( 'masterEnv' )
+cenv = masterEnv.Clone()
+cenv.AppendUnique( **python_capi_options )
+
+if sys.platform == 'win32':
+	if '_DEBUG' in cenv[ 'CPPDEFINES' ]:
+		cenv.Replace( CPPDEFINES = list( cenv[ 'CPPDEFINES' ] ) ) # SCons 1.2 bug: Clone() does not make a copy...
+		cenv[ 'CPPDEFINES' ].remove( '_DEBUG' )
+	if '/MDd' in cenv[ 'CCFLAGS' ]:
+		cenv.Replace( CCFLAGS = list( cenv[ 'CCFLAGS' ] ) ) # SCons 1.2 bug: Clone() does not make a copy...
+		cenv[ 'CCFLAGS' ].remove( '/MDd' )
+
+# check for python headers and libs
+conf = Configure( cenv )
+if not conf.CheckLibWithHeader( pylib, "Python.h", "C++", 'PyString_FromString( "Hello" );', 0 ):
+	have_python_capi = False
+
+conf.Finish()
+
+# export results
+Export( [ 'have_python_capi', 'python_capi_options' ] )

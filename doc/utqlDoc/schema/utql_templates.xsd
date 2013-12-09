@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : utql_templates.xsd
+    Created on : September 18, 2007, 15:46 AM
+    Author     : Peter Keitler
+    Description: See annotations of this schema
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+        xmlns:utql="http://ar.in.tum.de/ubitrack/utql"
+        xmlns:xi="http://www.w3.org/2001/XInclude"
+        targetNamespace="http://ar.in.tum.de/ubitrack/utql"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xml:lang="en-GB">
+    
+    <annotation>
+        <documentation>Ensures UTQL templates that are fully compliant with trackman.
+            Essentially, this schema makes mandatory the attributation of patterns/nodes/edges with display name and description and replaces the generic attribute type from utql.xsd with elaborate attribute specification types compliant to the trackman property editor.
+            
+            At least the following semantic checks are currently NOT performed:
+            * For EnumAttributeDeclarationType, the existence of the default value is not checked
+            * For EnumAttributeReferenceType, the existence of the override value (if specified) is not checed
+            * For Int/FloatAttributeDeclarationType, the value is not checked to be in the specified range
+            * For Int-/FloatArrayAttributeReferences the length of the default override arrary is not checked to be consistent
+        </documentation>
+    </annotation>
+    
+    <import namespace="http://www.w3.org/2001/XInclude" schemaLocation="http://www.w3.org/2001/XInclude.xsd"/>
+    
+    
+    
+    <!-- For debugging, don't remove -->
+    <!--redefine schemaLocation="http://ar.in.tum.de/files/ubitrack/utql/utql.xsd"-->
+    <redefine schemaLocation="./utql.xsd">
+        
+        <complexType name="UTQLRequestType">
+            <annotation>
+                <documentation>Refine UTQLRequestType so that document can contain global attribute declarations for attributes used by more than one pattern.</documentation>
+            </annotation>
+            
+            <complexContent>
+                <extension base="utql:UTQLRequestType">
+                    <sequence>
+                        <element name="GlobalNodeAttributeDeclarations" type="utql:GlobalAttributeDeclarationsType" minOccurs="0"/>
+                        <element name="GlobalEdgeAttributeDeclarations" type="utql:GlobalAttributeDeclarationsType" minOccurs="0"/>
+                        <element name="GlobalDataflowAttributeDeclarations" type="utql:GlobalAttributeDeclarationsType" minOccurs="0"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+        
+        <complexType name="AbstractPatternType">
+            <annotation>
+                <documentation>Make displayName mandatory</documentation>
+            </annotation>
+            
+            <complexContent>
+                <restriction base="utql:AbstractPatternType">
+                    <sequence>
+                        <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+                    </sequence>
+                    <attribute name="displayName" use="required" type="string"/>
+                </restriction>
+            </complexContent>
+        </complexType>        
+        
+        <complexType name="AbstractNodeType" abstract="true">
+            <annotation>
+                <documentation>Make displayName mandatory</documentation>
+            </annotation>
+            
+            <complexContent>
+                <restriction base="utql:AbstractNodeType">
+                    <sequence>
+                        <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+                        <element name="GuiPos" minOccurs="0" type="utql:GuiCoordType"/>
+                    </sequence>
+                    <attribute name="displayName" use="required" type="string"/>
+                </restriction>
+            </complexContent>
+        </complexType>
+        
+        <complexType name="AbstractEdgeType" abstract="true">
+            <annotation>
+                <documentation>Make displayName mandatory</documentation>
+            </annotation>
+            
+            <complexContent>
+                <restriction base="utql:AbstractEdgeType">
+                    <sequence>
+                        <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+                        <element name="GuiLandmark" minOccurs="0" type="utql:GuiCoordType"/>
+                        <element name="GuiLabelPos" minOccurs="0" type="utql:GuiCoordType"/>
+                    </sequence>
+                    <attribute name="displayName" use="required" type="string"/>
+                </restriction>
+            </complexContent>
+        </complexType>
+        
+        <complexType name="AttributeType" abstract="true">
+            <annotation>
+                <documentation>Make AttributeType abstract so as to ensures that one of the attribute declaration types defined within this file has to be used instead of the generic attribute type from utql.xsd.</documentation>
+            </annotation>
+            
+            <complexContent>
+                <restriction base="utql:AttributeType">
+                    <sequence>
+                        <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+                        <element name="Value" minOccurs="0" maxOccurs="0" type="utql:ArbitraryXmlValueType"/>
+                    </sequence>
+                    <attribute name="name" type="string" use="required"/>
+                    <attribute name="displayName" type="string"/>
+                    <attribute name="value" type="string"/>
+                </restriction>
+            </complexContent>                
+        </complexType>
+        
+    </redefine>
+    
+    
+    
+    <element name="UTQLPatternTemplates" type="utql:UTQLRequestType">        
+        <annotation>
+            <documentation>Root element of a pattern template document, contains pattern templates and global attribute declarations for node/edge/dataflow attributes.
+            The element ensures that referenced attribute declarations exist.</documentation>
+        </annotation>
+        
+        <unique name="PatternNameKey">
+            <selector xpath="utql:Pattern"/>
+            <field xpath="@name"/>
+        </unique>
+
+        <unique name="GlobalNodeAttributeDeclarationsNameKey">
+            <selector xpath="utql:GlobalNodeAttributeDeclarations/utql:Attribute"/>
+            <field xpath="@name"/>
+        </unique>
+        
+        <!--keyref name="GlobalNodeAttributeDeclarationsNameKeyRef" refer="utql:GlobalNodeAttributeDeclarationsNameKey">
+            <selector xpath="utql:Pattern/utql:Output/utql:Node/utql:Attribute"/>
+            <field xpath="@name"/>
+        </keyref-->
+        
+        <unique name="GlobalEdgeAttributeDeclarationsNameKey">
+            <selector xpath="utql:GlobalEdgeAttributeDeclarations/utql:Attribute"/>
+            <field xpath="@name"/>
+        </unique>
+        
+        <!--keyref name="GlobalEdgeAttributeDeclarationsNameKeyRef" refer="utql:GlobalEdgeAttributeDeclarationsNameKey">
+            <selector xpath="utql:Pattern/utql:Output/utql:Edge/utql:Attribute"/>
+            <field xpath="@name"/>
+        </keyref-->
+        
+        <unique name="GlobalDataflowAttributeDeclarationsNameKey">
+            <selector xpath="utql:GlobalDataflowAttributeDeclarations/utql:Attribute"/>
+            <field xpath="@name"/>
+        </unique>
+        
+        <!--keyref name="GlobalDataflowAttributeDeclarationsNameKeyRef" refer="utql:GlobalDataflowAttributeDeclarationsNameKey">
+            <selector xpath="utql:Pattern/utql:DataflowConfiguration/utql:Attribute"/>
+            <field xpath="@name"/>
+        </keyref-->
+    </element>
+    
+    
+    
+    <element name="UTQLAttributes" type="utql:UTQLAttributesType">
+        <annotation>
+            <documentation>Containter for global attributes which cannot contain pattern templates at the same time</documentation>
+        </annotation>
+    </element>
+    
+    <complexType name="UTQLAttributesType">
+        <sequence>
+            <element name="GlobalNodeAttributeDeclarations" type="utql:GlobalAttributeDeclarationsType" minOccurs="0"/>
+            <element name="GlobalEdgeAttributeDeclarations" type="utql:GlobalAttributeDeclarationsType" minOccurs="0"/>
+            <element name="GlobalDataflowAttributeDeclarations" type="utql:GlobalAttributeDeclarationsType" minOccurs="0"/>
+        </sequence>
+    </complexType>
+    
+    
+    
+    <complexType name="GlobalAttributeDeclarationsType">
+        <annotation>
+            <documentation>In here, attributes that are needed for more than one entity (e.g. node) within a template document can be declared or also imported using XInclude.</documentation>
+        </annotation>
+        
+        <choice maxOccurs="unbounded">
+            <element ref="xi:include"/>
+            <element name="Attribute" type="utql:AttributeDeclarationType"/>
+        </choice>
+    </complexType>
+    
+    
+    
+    <complexType name="StructAttributeReferenceType">
+        <annotation>
+            <documentation>This reference type does not allow overriding the default value given in the attribute declaration.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <restriction base="utql:AttributeType">
+                <attribute name="value" use="prohibited" type="string"/>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ListAttributeReferenceType">
+        <annotation>
+            <documentation>This reference type does not allow overriding the default value given in the attribute declaration.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <restriction base="utql:AttributeType">
+                <attribute name="value" use="prohibited" type="string"/>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="StringAttributeReferenceType">
+        <complexContent>
+            <extension base="utql:AttributeType"/>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ExtendedStringAttributeReferenceType">
+        <annotation>
+            <documentation>This reference type does not allow overriding the default value given in the attribute declaration.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <restriction base="utql:AttributeType">
+                <attribute name="value" use="prohibited" type="string"/>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="HexAttributeReferenceType">
+        <complexContent>
+            <extension base="utql:AttributeType"/>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="PathAttributeReferenceType">
+        <complexContent>
+            <extension base="utql:AttributeType"/>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="EnumAttributeReferenceType">
+        <complexContent>
+            <extension base="utql:AttributeType"/>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="IntAttributeReferenceType">
+        <complexContent>
+            <extension base="utql:AttributeType"/>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="DoubleAttributeReferenceType">
+        <complexContent>
+            <extension base="utql:AttributeType"/>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="IntArrayAttributeReferenceType">
+        <complexContent>
+            <extension base="utql:AttributeType"/>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="DoubleArrayAttributeReferenceType">
+        <complexContent>
+            <extension base="utql:AttributeType"/>
+        </complexContent>
+    </complexType>
+    
+    
+    
+    <complexType name="RestrictedAttributeDeclarationType" abstract="true">
+        <annotation>
+            <documentation>Make displayName mandatory on all attribute declarations by restricting AttributeType.
+            This "intermediate" type is necessary since in XML Schema, either restriction or extension can be used for derivation of new types. See also AttributeDeclarationType.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <restriction base="utql:AttributeType">
+                <attribute name="displayName" type="string" use="required"/>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="AttributeDeclarationType" abstract="true">
+        <annotation>
+            <documentation>Specify generic layout of all attribute declaration types by extending RestrictedAttributeDeclarationType.</documentation>
+        </annotation>
+        
+        <complexContent>
+            <extension base="utql:RestrictedAttributeDeclarationType">
+                <sequence>
+                    <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+                </sequence>
+                <attribute name="constant" type="boolean"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="StructAttributeDeclarationType">
+        <complexContent>
+            <extension base="utql:AttributeDeclarationType">
+                <choice maxOccurs="unbounded">
+                    <element name="Attribute" type="utql:AttributeType"/>
+                </choice>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ListAttributeDeclarationType">
+        <complexContent>
+            <extension base="utql:AttributeDeclarationType">
+                <choice>
+                    <element name="Attribute" type="utql:AttributeType"/>
+                </choice>
+                <attribute name="minlen" type="integer" use="optional"/>
+                <attribute name="maxlen" type="integer" use="optional"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="StringAttributeDeclarationType">
+        <complexContent>
+            <extension base="utql:AttributeDeclarationType">
+                <attribute name="default" type="string"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ExtendedStringAttributeDeclarationType">
+        <complexContent>
+            <extension base="utql:AttributeDeclarationType">
+                <sequence minOccurs="0">
+                    <element name="Default" type="utql:ArbitraryXmlValueType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="HexAttributeDeclarationType">
+        <complexContent>
+            <extension base="utql:AttributeDeclarationType">
+                <attribute name="default" type="string"/>                    
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="PathAttributeDeclarationType">
+        <complexContent>
+            <extension base="utql:AttributeDeclarationType">
+                <attribute name="default" type="string"/>                    
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="EnumAttributeDeclarationType">
+        <complexContent>
+            <extension base="utql:AttributeDeclarationType">
+                <sequence>
+                    <element name="EnumValue" maxOccurs="unbounded" type="utql:EnumValueType"/>
+                </sequence>
+                <attribute name="default" type="utql:IDType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="EnumValueType">
+        <sequence minOccurs="0">
+            <element name="Description" type="utql:DescriptionType"/>
+        </sequence>
+        <attribute name="name" type="utql:IDType" use="required"/>
+        <attribute name="displayName" type="utql:IDType" use="required"/>
+    </complexType>
+    
+    <complexType name="IntAttributeDeclarationType">
+        <complexContent>
+            <extension base="utql:AttributeDeclarationType">
+                <attribute name="min" type="integer"/>
+                <attribute name="max" type="integer"/>
+                <attribute name="default" type="integer"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="DoubleAttributeDeclarationType">
+        <complexContent>
+            <extension base="utql:AttributeDeclarationType">
+                <attribute name="min" type="double"/>
+                <attribute name="max" type="double"/>
+                <attribute name="default" type="double"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="IntArrayAttributeDeclarationType">
+        <complexContent>
+            <extension base="utql:AttributeDeclarationType">
+                <sequence>
+                    <element name="IntValue" maxOccurs="unbounded" type="utql:IntValueType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="DoubleArrayAttributeDeclarationType">
+        <complexContent>
+            <extension base="utql:AttributeDeclarationType">
+                <sequence>
+                    <element name="DoubleValue" maxOccurs="unbounded" type="utql:DoubleValueType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="IntValueType">
+        <sequence>
+            <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+        </sequence>
+        <attribute name="name" type="utql:IDType" use="required"/>
+        <attribute name="displayName" type="utql:IDType" use="required"/>
+        <attribute name="default" type="integer"/>
+    </complexType>
+    
+    <complexType name="DoubleValueType">
+        <sequence>
+            <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+        </sequence>
+        <attribute name="name" type="utql:IDType" use="required"/>
+        <attribute name="displayName" type="utql:IDType" use="required"/>
+        <attribute name="default" type="double"/>
+    </complexType>
+    
+</schema>

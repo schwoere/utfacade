@@ -1,0 +1,7 @@
+# order of which the SConscript are called is of importance this time
+sconsfiles = ['utFacade/SConscript', 'utComponents/SConscript' ]
+
+# call all SConscript files
+SConscript( sconsfiles )
+success = True
+Return('success')

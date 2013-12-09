@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<UTQLResponse xmlns='http://ar.in.tum.de/ubitrack/utql'
+              xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+              xmlns:xi="http://www.w3.org/2001/XInclude"
+              xsi:schemaLocation='http://ar.in.tum.de/ubitrack/utql http://ar.in.tum.de/files/ubitrack/utql/utql_types.xsd   http://www.w3.org/1999/xhtml http://ar.in.tum.de/files/ubitrack/utql/xhtml1-strict.xsd'>
+    
+    <Pattern name="TestSource" id="TS">
+        <Output>
+            <Node name="A" id="A"/>
+            <Node name="B" id="B"/>
+            <Edge name="Output" source="A" destination="B">
+                <Attribute name="type" value="6D"/>
+                <Attribute name="mode" value="push"/>
+            </Edge>
+        </Output>
+        <DataflowConfiguration>
+            <UbitrackLib class="TestSourcePose"/>
+        </DataflowConfiguration>
+    </Pattern>
+    
+    <Pattern name="PosePushApplicationSink" id="TestReceiver">
+        <Input>
+            <Node name="A" id="A"/>
+            <Node name="B" id="B"/>
+            <Edge name="Input" source="A" destination="B" pattern-ref="TS" edge-ref="Output"/>
+        </Input>
+        <DataflowConfiguration>
+            <UbitrackLib class="ApplicationPushSinkPose"/>
+        </DataflowConfiguration>
+    </Pattern>
+
+</UTQLResponse>

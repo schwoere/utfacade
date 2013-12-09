@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : utql_types.xsd
+    Created on : September 20, 2007, 15:46 AM
+    Author     : Peter Keitler
+    Description: See annotations of this schema
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+        xmlns:utql="http://ar.in.tum.de/ubitrack/utql"
+        targetNamespace="http://ar.in.tum.de/ubitrack/utql"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xml:lang="en-GB">
+    
+    <annotation>
+        <documentation>Defines generic types that should be used in combination with UTQL (see utql.xsd) to attributize patterns, nodes, and edges.
+            This schema includes the core UTQL specification (utql.xsd) and introduces a type specification for attributes which can be used optionally instead of the generic attribute type.
+        </documentation>
+    </annotation>
+    
+    <!-- For debugging, don't remove -->
+    <!--include schemaLocation="http://ar.in.tum.de/files/ubitrack/utql/utql.xsd"/-->
+    <include schemaLocation="./utql.xsd"/>
+    
+    
+
+    <complexType name="StructValueType">
+        <complexContent mixed="false">
+            <restriction base="utql:ArbitraryXmlValueType">
+                <sequence>
+                    <element name="Attribute" minOccurs="0" maxOccurs="unbounded" type="utql:AttributeType"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    
+    
+    <complexType name="ListValueType" abstract="true">
+        <complexContent mixed="false">
+            <restriction base="utql:ArbitraryXmlValueType">
+                <choice>
+                    <element name="Attribute" minOccurs="0" maxOccurs="unbounded" type="utql:AttributeType"/>
+                </choice>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ListOfPrimitiveValueType">
+        <complexContent>
+            <restriction base="utql:ListValueType">
+                <choice>
+                    <element name="Attribute" minOccurs="0" maxOccurs="unbounded" type="utql:PrimitiveAttributeType"/>
+                </choice>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ListOfExtendedStringValueType">
+        <complexContent>
+            <restriction base="utql:ListValueType">
+                <choice>
+                    <element name="Attribute" minOccurs="0" maxOccurs="unbounded" type="utql:ExtendedStringAttributeType"/>
+                </choice>
+            </restriction>
+        </complexContent>
+    </complexType>    
+    
+    <complexType name="ListOfStructValueType">
+        <complexContent>
+            <restriction base="utql:ListValueType">
+                <choice>
+                    <element name="Attribute" minOccurs="0" maxOccurs="unbounded" type="utql:StructAttributeType"/>
+                </choice>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ListOfListValueType">
+        <complexContent>
+            <restriction base="utql:ListValueType">
+                <choice>
+                    <element name="Attribute" minOccurs="0" maxOccurs="unbounded" type="utql:ListAttributeType"/>
+                </choice>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    
+    
+    <complexType name="PrimitiveAttributeType">
+        <complexContent>
+            <restriction base="utql:AttributeType">
+                <sequence>
+                    <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+                    <element name="Value" minOccurs="0" maxOccurs="0" type="utql:ArbitraryXmlValueType"/>
+                </sequence>
+                <attribute name="value" type="string" use="required"/>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ExtendedStringAttributeType">
+        <complexContent>
+            <restriction base="utql:AttributeType">
+                <sequence>
+                    <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+                    <element name="Value" minOccurs="1" maxOccurs="1" type="utql:ArbitraryXmlValueType"/>
+                </sequence>
+                <attribute name="value" type="string" use="prohibited"/>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="StructAttributeType">
+        <complexContent>
+            <restriction base="utql:AttributeType">
+                <sequence>
+                    <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+                    <element name="Value" minOccurs="1" maxOccurs="1" type="utql:StructValueType"/>
+                </sequence>
+                <attribute name="value" type="string" use="prohibited"/>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ListAttributeType">
+        <complexContent>
+            <restriction base="utql:AttributeType">
+                <sequence>
+                    <element name="Description" minOccurs="0" type="utql:DescriptionType"/>
+                    <element name="Value" minOccurs="1" maxOccurs="1" type="utql:ListValueType"/>
+                </sequence>
+                <attribute name="value" type="string" use="prohibited"/>
+            </restriction>
+        </complexContent>
+    </complexType>
+    
+</schema>

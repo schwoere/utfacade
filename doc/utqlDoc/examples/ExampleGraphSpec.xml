@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : ExampleGraphSpec.xml
+    Created on : May 7, 2007, 10:37 AM
+    Author     : Daniel Pustka, Peter Keitler
+    Description: This file shows a simple example of a UTQL request containing a base SRG registration.
+-->
+
+<UTQLRequest name="exampleBaseSrg" xmlns='http://ar.in.tum.de/ubitrack/utql'
+           xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+           xsi:schemaLocation='http://ar.in.tum.de/ubitrack/utql http://ar.in.tum.de/files/ubitrack/utql/utql_types.xsd'>
+    
+    <Pattern name="Art">
+        <Output>
+            <Node name="Art" id="Art">
+                <GuiPos x="5" y="10"/>
+                <Attribute name="ArtPort" value="5000"/>
+            </Node>
+        </Output>
+    </Pattern>
+    
+    <Pattern name="Hmd">
+        <Input>
+            <Node name="Art">
+                <!-- When displaying the complete UTQL reqeust, then this GuiPos will be ignored since the node already has other coordinates -->
+                <GuiPos x="50" y="100"/>
+                <Predicate>id=='Art'</Predicate>
+            </Node>
+        </Input>
+        <Output>
+            <Node name="ArtHmd"/>
+            <Edge name="ArtToArtHmd" source="Art" destination="ArtHmd"> 
+                <GuiLandmark x="2" y="3"/>
+                <GuiLabelPos x="10" y="10"/>
+                <Attribute name="type" value="6DOF"/>
+                <Attribute name="ArtBodyId" value="3"/>
+            </Edge>
+        </Output>
+        <DataflowConfiguration>
+            <UbitrackLib class="ArtTracker"/>
+        </DataflowConfiguration>   
+    </Pattern>
+    
+    <Pattern name="Sheep">
+        <Input>
+            <Node name="Art"><Predicate>id=='Art'</Predicate></Node>
+        </Input>
+        <Output>
+            <Node name="ArtSheep"/>
+            <Edge name="ArtToArtSheep" source="Art" destination="ArtSheep">
+                <Attribute name="type" value="6DOF"/>
+                <Attribute name="ArtBodyId" value="7"/>
+            </Edge>
+        </Output>
+        <DataflowConfiguration>
+            <UbitrackLib class="ArtTracker"/>
+        </DataflowConfiguration>
+    </Pattern>
+    
+</UTQLRequest>

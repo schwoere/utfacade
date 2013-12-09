@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : ExampleAppQuery.xml
+    Created on : May 7, 2007, 10:39 AM
+    Author     : Daniel Pustka, Peter Keitler
+    Description: This file shows a simple example of a UTQL request containing an application query.
+-->
+
+<UTQLRequest name="ExampleAppQuery" xmlns='http://ar.in.tum.de/ubitrack/utql'
+           xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+           xsi:schemaLocation='http://ar.in.tum.de/ubitrack/utql http://ar.in.tum.de/files/ubitrack/utql/utql_types.xsd'>
+               
+    <Pattern name="SheepQuery">
+        <Input>
+            <Node name="Hmd">
+                <Predicate>id=='ArtHmd'</Predicate>
+            </Node>
+            <Node name="Sheep">
+                <Predicate>id=='ArtSheep'</Predicate>
+            </Node>
+            
+            <Edge name="TheEdge" source="Hmd" destination="Sheep">
+                <Predicate>type='6DOF'</Predicate>
+            </Edge>
+        </Input>
+        <DataflowConfiguration>
+            <UbitrackLib class="ApplicationPushSink"/>
+        </DataflowConfiguration>
+    </Pattern>
+    
+</UTQLRequest>

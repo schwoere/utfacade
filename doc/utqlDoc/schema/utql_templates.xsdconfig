@@ -1,0 +1,7 @@
+<!-- See myconfig.xsdconfig in 'samples/XsdConfig/schemas/' of xmlbeans package for further information -->
+
+<xb:config xmlns:xb="http://xml.apache.org/xmlbeans/2004/02/xbean/config"   xmlns:utql="http://ar.in.tum.de/ubitrack/utql">
+  <xb:namespace uri="http://ar.in.tum.de/ubitrack/utql">
+    <xb:package>de.tum.in.ar.ubitrack.utql_templates</xb:package>
+  </xb:namespace> 
+</xb:config>

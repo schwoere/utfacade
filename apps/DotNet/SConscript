@@ -1,0 +1,28 @@
+import os, sys
+Import( '*' )
+
+#if 'swig' in masterEnv[ 'TOOLS' ] and not sys.platform == 'darwin':
+env = masterEnv.Clone()
+
+if not have_swig :
+	print "Not building DotNet Wrapper: SWIG not available."
+elif sys.platform == 'darwin' :
+	print "Not building DotNet Wrapper: DotNet not available on Mac OS."
+elif sys.platform.startswith("linux") and not platform=='android':
+	print "Not building DotNet Wrapper: DotNet not available on linux."	
+else:
+	lib_name = 'ubitrack_dotnet_swig'	
+		
+	# generate wrappers with SWIG
+	env[ 'SWIGFLAGS' ] = [ '-c++', '-csharp', '-dllimport', lib_name + configuration_suffix, '-namespace', 'Ubitrack' ]
+	all_wrapper_sources = env.CXXFile( target = 'ubitrack_dotnet_swig.cc', source = os.path.join( "..", "Java", "interface.i" ) )
+	cpp_wrapper_sources = filter( lambda x: str( x ).endswith( ".cc" ), all_wrapper_sources )		
+
+
+	# link the extension module
+	config_options = mergeOptions( utfacade_all_options, utdataflow_all_options, utvision_all_options)
+	#uterrorvis_options
+	env.AppendUnique( **config_options )
+
+	
+	lib = setupLibraryBuild(env, cpp_wrapper_sources, lib_name, 'dotnet')	
