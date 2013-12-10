@@ -1,4 +1,7 @@
 import os, sys
+
+have_swig = False
+
 Import( '*' )
 
 #if 'swig' in masterEnv[ 'TOOLS' ] and not sys.platform == 'darwin':

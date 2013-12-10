@@ -1,5 +1,9 @@
 import os
 import glob
+
+have_swig = False
+have_java = False
+
 Import( '*' )
 
 if not have_swig:

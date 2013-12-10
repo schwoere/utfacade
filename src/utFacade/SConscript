@@ -28,6 +28,7 @@ have_lapack = False
 have_opencv = False
 have_directshow = False
 have_utvision = False
+have_utdataflow = False
 
 Import( '*' )
 
