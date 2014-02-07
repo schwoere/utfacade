@@ -32,6 +32,10 @@ else:
 	env[ 'SWIGFLAGS' ] = [ '-v', '-c++', '-java', '-package', 'ubitrack', '-outdir', os.path.join( buildDir.abspath, "gensrc", "ubitrack") ]
 	env[ 'JARCHDIR' ]  = os.path.join( buildDir.path, 'classes' )
 	env[ 'JAVACLASSPATH' ] = os.path.join( buildDir.path, 'gensrc' )
+	
+	# Add the Java bin directory to the PATH environment variable, that it can be found in any case
+	env.PrependENVPath('PATH', os.path.join( env[ 'JAVA_HOME' ], 'bin' ))
+	
 	config_options = mergeOptions( utfacade_all_options, utdataflow_all_options, utvision_all_options)
 	env.AppendUnique( **config_options )
 	env.AppendUnique( LIBS = boost_libs( [ 'thread' ] ) )
