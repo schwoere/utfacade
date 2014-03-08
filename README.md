@@ -4,7 +4,7 @@ This is the utfacade Ubitrack submodule.
 
 Usage
 -----
-In order to use it, you have to clone the buildenvironment, change to the ubitrack directory and add utFacade by executing:
+In order to use it, you have to clone the buildenvironment, change to the ubitrack directory and add the utfacade by executing:
 
     git submodule add https://github.com/schwoere/utfacade.git modules/utfacade
 
