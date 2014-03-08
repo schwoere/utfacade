@@ -1,9 +1,20 @@
 utfacade
 ========
-This is the utfacade Ubitrack submodule. In order to use it, you have to clone the buildenvironment, change to the ubitrack directory and add utFacade by executing:
+This is the utfacade Ubitrack submodule.
+
+Usage
+-----
+In order to use it, you have to clone the buildenvironment, change to the ubitrack directory and add utFacade by executing:
 
     git submodule add https://github.com/schwoere/utfacade.git modules/utfacade
-The utfacade contains frontend adapters for ubitrack dataflow networks. It also contains the utConsole. In addition, this component has to following submodule dependencies which have to be added for successful building:
+
+Description
+----------
+The utfacade contains frontend adapters for ubitrack dataflow networks. It also contains the utConsole.
+
+Dependencies
+----------
+In addition, this component has to following submodule dependencies which have to be added for successful building:
 
 <table>
 
