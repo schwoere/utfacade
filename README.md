@@ -14,7 +14,7 @@ The utfacade contains frontend adapters for ubitrack dataflow networks. It also 
 
 Dependencies
 ----------
-In addition, this component has to following submodule dependencies which have to be added for successful building:
+In addition, this module has to following submodule dependencies which have to be added for successful building:
 
 <table>
 
