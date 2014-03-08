@@ -22,9 +22,9 @@ In addition, this component has to following submodule dependencies which have t
     <th>Dependency</th><th>Dependent Components</th><th>optional Dependency</th>
   </tr>
   <tr>
-    <td>utDataflow</td><td>utFacade, utComponents</td><td>no</td>
+    <td>utdataflow</td><td>utFacade, utComponents</td><td>no</td>
   </tr>
    <tr>
-    <td>utVision</td><td>utComponents, ApplicationEndpointsVision</td><td>yes</td>
+    <td>utvision</td><td>utComponents, ApplicationEndpointsVision</td><td>yes</td>
   </tr>
 </table>
