@@ -10,7 +10,7 @@ Usage
 -----
 In order to use it, you have to clone the buildenvironment, change to the ubitrack directory and add the utfacade by executing:
 
-    git submodule add https://github.com/schwoere/utfacade.git modules/utfacade
+    git submodule add https://github.com/Ubitrack/utfacade.git modules/utfacade
 
 Dependencies
 ----------
@@ -19,12 +19,12 @@ In addition, this module has to following submodule dependencies which have to b
 <table>
 
   <tr>
-    <th>Dependency</th><th>Dependent Components</th><th>optional Dependency</th>
+    <th>Component</th><th>Dependency</th>
   </tr>
   <tr>
-    <td>utdataflow</td><td>utFacade, utComponents</td><td>no</td>
+    <td>all</td><td>utDataflow</td>
   </tr>
    <tr>
-    <td>utvision</td><td>utComponents, ApplicationEndpointsVision</td><td>yes</td>
+    <td>ApplicationEndpointsVision</td><td>utVision</td>
   </tr>
 </table>
